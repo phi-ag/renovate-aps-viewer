@@ -7,6 +7,20 @@
     "group:recommended"
   ],
   "postUpdateOptions": ["pnpmDedupe"],
+  "customDatasources": {
+    "aps-viewer": {
+      "defaultRegistryUrlTemplate": "https://renovate-aps-viewer.phi-ag.workers.dev"
+    }
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^example\\.config\\.ts$"],
+      "matchStrings": ["export const version = \"(?<currentValue>.+?)\";"],
+      "datasourceTemplate": "custom.aps-viewer",
+      "depNameTemplate": "aps-viewer"
+    }
+  ],
   "packageRules": [
     { "matchDepNames": ["node"], "ignoreUnstable": false },
     {
