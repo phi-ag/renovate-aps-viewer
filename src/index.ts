@@ -1,14 +1,4 @@
-class ElementHandler {
-  readonly versions = new Set<string>();
-  readonly #versionRegex = new RegExp(/^\d+\.\d+\.\d+$/);
-
-  text({ text }: { text: string }) {
-    if (this.#versionRegex.test(text)) {
-      this.versions.add(text);
-    }
-  }
-}
-
+/// NOTE: Hard coded magic value, see https://aps.autodesk.com/params/custom.js
 const magic = "bPlouYTd";
 
 const configUrl = `https://developer.doc.config.autodesk.com/${magic}/viewer_v7.json`;
@@ -32,6 +22,17 @@ interface Config {
   ];
 }
 
+class ElementHandler {
+  readonly versions = new Set<string>();
+  readonly #versionRegex = new RegExp(/^\d+\.\d+\.\d+$/);
+
+  text({ text }: { text: string }) {
+    if (this.#versionRegex.test(text)) {
+      this.versions.add(text);
+    }
+  }
+}
+
 const fetchVersions = async (): Promise<string[]> => {
   const configResponse = await fetch(configUrl);
   if (!configResponse.ok)
@@ -39,10 +40,10 @@ const fetchVersions = async (): Promise<string[]> => {
 
   const config = await configResponse.json<Config>();
 
-  const history = config?.children?.find((c) => c?.url_path === "change_history");
+  const history = config?.children?.find((c) => c.url_path === "change_history");
   if (!history) throw Error("Missing change history");
 
-  const source = history.children?.find((c) => c?.url_path === "changelog_v7")?.source;
+  const source = history.children?.find((c) => c.url_path === "changelog_v7")?.source;
   if (!source) throw Error("Missing changelog source");
 
   const changelogUrl = `https://developer.doc.autodesk.com/${magic}/${source}`;
