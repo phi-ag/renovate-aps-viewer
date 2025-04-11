@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "name": "renovate-aps-viewer",
+  "license": "MIT",
+  "description": "Serve APS viewer versions for Renovate Custom Datasources",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phi-ag/renovate-aps-viewer.git"
+  },
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "typegen": "wrangler types src/worker-configuration.d.ts",
+    "format": "prettier --write \"**/*.{js,ts,json,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{js,ts,json,yml,yaml}\"",
+    "check": "pnpm format:check && pnpm typecheck"
+  },
+  "devDependencies": {
+    "prettier": "3.5.3",
+    "typescript": "5.8.3",
+    "wrangler": "4.10.0"
+  },
+  "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971"
+}
