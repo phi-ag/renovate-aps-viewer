@@ -22,7 +22,7 @@ Parse APS viewer versions from [aps.autodesk.com](https://aps.autodesk.com/en/do
     {
       "customType": "regex",
       "managerFilePatterns": ["vite.config.ts"],
-      "matchStrings": ["const viewerVersion = \"(?<currentValue>.+?)\";"],
+      "matchStrings": ["const viewerVersion = \"(?<currentValue>[^\"]+)\""],
       "datasourceTemplate": "custom.aps-viewer",
       "depNameTemplate": "aps-viewer"
     }

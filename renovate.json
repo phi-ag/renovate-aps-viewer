@@ -16,7 +16,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": ["example.config.ts"],
-      "matchStrings": ["export const version = \"(?<currentValue>.+?)\";"],
+      "matchStrings": ["export const version = \"(?<currentValue>[^\"]+)\""],
       "datasourceTemplate": "custom.aps-viewer",
       "depNameTemplate": "aps-viewer"
     }
