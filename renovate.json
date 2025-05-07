@@ -15,7 +15,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^example\\.config\\.ts$"],
+      "managerFilePatterns": ["example.config.ts"],
       "matchStrings": ["export const version = \"(?<currentValue>.+?)\";"],
       "datasourceTemplate": "custom.aps-viewer",
       "depNameTemplate": "aps-viewer"

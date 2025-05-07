@@ -21,7 +21,7 @@ Parse APS viewer versions from [aps.autodesk.com](https://aps.autodesk.com/en/do
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^vite\\.config\\.ts$"],
+      "managerFilePatterns": ["vite.config.ts"],
       "matchStrings": ["const viewerVersion = \"(?<currentValue>.+?)\";"],
       "datasourceTemplate": "custom.aps-viewer",
       "depNameTemplate": "aps-viewer"
