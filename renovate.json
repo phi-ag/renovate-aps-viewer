@@ -6,7 +6,6 @@
     "group:monorepos",
     "group:recommended"
   ],
-  "postUpdateOptions": ["pnpmDedupe"],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
@@ -26,6 +25,7 @@
     }
   ],
   "packageRules": [
+    { "matchPackageNames": ["!pnpm"], "postUpdateOptions": ["pnpmDedupe"] },
     { "matchDepNames": ["node"], "ignoreUnstable": false },
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
