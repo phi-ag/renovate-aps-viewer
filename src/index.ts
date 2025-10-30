@@ -22,18 +22,54 @@ interface Config {
   ];
 }
 
+interface Release {
+  version: string;
+  releaseTimestamp: Date;
+}
+
 class ElementHandler {
-  readonly versions = new Set<string>();
+  readonly releases: Release[] = [];
+
   readonly #versionRegex = new RegExp(/^\d+\.\d+\.\d+$/);
+
+  readonly #releaseDateRegex = new RegExp(
+    /^Release Date:? (?<month>\d{1,2})[\/-](?<day>\d{1,2})[\/-](?<year>\d{4})$/
+  );
+
+  #currentVersion: string | null = null;
 
   text({ text }: { text: string }) {
     if (this.#versionRegex.test(text)) {
-      this.versions.add(text);
+      if (this.#currentVersion !== null) {
+        console.warn(`Missing release date for version '${this.#currentVersion}'`);
+      }
+
+      this.#currentVersion = text;
+      return;
+    }
+
+    const releaseDate = this.#releaseDateRegex.exec(text)?.groups;
+    if (releaseDate && releaseDate.day && releaseDate.month && releaseDate.year) {
+      if (this.#currentVersion === null) {
+        console.warn(`Missing version for release date '${text}'`);
+        return;
+      }
+
+      const year = parseInt(releaseDate.year);
+      const month = parseInt(releaseDate.month);
+      const day = parseInt(releaseDate.day);
+
+      this.releases.push({
+        version: this.#currentVersion,
+        releaseTimestamp: new Date(Date.UTC(year, month - 1, day))
+      });
+
+      this.#currentVersion = null;
     }
   }
 }
 
-const fetchVersions = async (): Promise<string[]> => {
+const fetchReleases = async (): Promise<Release[]> => {
   const configResponse = await fetch(configUrl);
   if (!configResponse.ok)
     throw Error(`Failed to fetch config ${await configResponse.text()}`);
@@ -51,16 +87,19 @@ const fetchVersions = async (): Promise<string[]> => {
   if (!changelog.ok) throw Error(`Failed to fetch changelog ${await changelog.text()}`);
 
   const handler = new ElementHandler();
-  await new HTMLRewriter().on("h2", handler).transform(changelog).arrayBuffer();
+  await new HTMLRewriter()
+    .on("h2", handler)
+    .on("em", handler)
+    .transform(changelog)
+    .arrayBuffer();
 
-  return Array.from(handler.versions);
+  return handler.releases;
 };
 
 export default {
   async fetch(): Promise<Response> {
     try {
-      const versions = await fetchVersions();
-      const releases = versions.map((version) => ({ version }));
+      const releases = await fetchReleases();
 
       return Response.json({
         releases,
