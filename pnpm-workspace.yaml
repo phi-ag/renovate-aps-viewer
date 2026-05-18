@@ -1,8 +1,11 @@
 savePrefix: ""
 autoInstallPeers: false
 strictPeerDependencies: true
-onlyBuiltDependencies:
-  - esbuild
-  - workerd
-ignoredBuiltDependencies:
-  - sharp
+minimumReleaseAge: 1440
+blockExoticSubdeps: true
+trustPolicy: "no-downgrade"
+
+allowBuilds:
+  esbuild: false
+  workerd: false
+  sharp: false
